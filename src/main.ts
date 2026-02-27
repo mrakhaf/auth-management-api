@@ -5,6 +5,13 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
+  // Enable CORS to handle preflight requests
+  app.enableCors({
+    origin: true, // Allow all origins (adjust as needed for production)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  });
+  
   // Enable global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
