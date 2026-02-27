@@ -47,9 +47,12 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto
 
-    // Find user by email
-    const user = await this.prisma.user.findUnique({
-      where: { email },
+    // Find user by email (only non-deleted users)
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email,
+        deleted_at: null,
+      },
     })
 
     if (!user) {
