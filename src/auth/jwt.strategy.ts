@@ -17,17 +17,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(payload: { sub: string; email: string }) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: payload.sub },
-    })
-
-    if (!user) {
+  async validate(payload: any) {
+    // Since the JWT payload now contains the complete user object,
+    // we can return it directly without querying the database
+    if (!payload || !payload.id) {
       throw new UnauthorizedException('Invalid token')
     }
 
-    // Remove password from user object
-    const { password, ...result } = user
-    return result
+    return payload
   }
 }

@@ -62,12 +62,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials')
     }
 
-    // Generate JWT
-    const payload = { sub: user.id, email: user.email }
+    // Generate JWT with complete user data in payload
+    const { password: _, ...userWithoutPassword } = user
+    const payload = userWithoutPassword
     const accessToken = this.jwtService.sign(payload)
 
     return {
       access_token: accessToken,
+      user: userWithoutPassword,
     }
   }
 
